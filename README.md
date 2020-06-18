@@ -3,7 +3,12 @@
 The project aims to simulate in a cluster of VMs (3 VMs) the process of streaming accesses to a web page with two events being produced: one of them informs the website and the system that the user log in and the other case the information of ( only for user that register on the site).
 
 
-
+- [x] Strat a little explanation
+- [ ] Describe the Kafka SetUp
+- [ ] Describe the Producer 
+- [ ] Describe the Consumer
+- [ ] Describe the Streaming Data Storage 
+- [ ] More to come ...
 
 ## Install Zookeeper:
 ![alt text](https://zookeeper.apache.org/images/zookeeper_small.gif "ZooKeeper")
