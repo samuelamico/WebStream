@@ -34,11 +34,26 @@ tar -zxf {FILE}
 mv zookeeper-3.4.6 /usr/local/zookeeper
 mkdir -p /var/lib/zookeeper
 cp  /usr/local/zookeeper/conf/zoo_sample.cfg  /usr/local/zookeeper/conf/zoo.cfg 
-export JAVA_HOME={JAVA_VERSION}
+export JAVA_HOME={/usr/path/JAVA_VERSION}
 ```
 
 To start zookeep: /usr/local/zookeeper/bin/zkServer.sh start
 Or you can use my ./start_server.sh file.
+
+## Install Kafka:
+With Zookeeper, now you can install Apache Kafka. The
+current release of Kafka can be downloaded at http://kafka.apache.org/down
+loads.html.
+
+```bash
+tar -zxf kafka_2.{VERSION}.tgz
+mv kafka_2.{VERSION} /usr/local/kafka
+mkdir /tmp/kafka-logs
+/usr/local/kafka/bin/kafka-server-start.sh -daemon
+/usr/local/kafka/config/server.properties
+```
+
+To start Kafka you can use my ./start_topics.sh file
 
 ## Cluster single-node:
 
