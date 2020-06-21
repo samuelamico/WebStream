@@ -7,6 +7,8 @@ import time
 import random
 from datetime import datetime
 
+from Producer import KafkaProducer
+
 fake = Faker(['en_US'])
 fake.add_provider(WifiESSID)
 
@@ -27,12 +29,21 @@ class PageAccess(KafkaProducer):
         self.plataform = random.choice(self.__plataform)
         
         self.__timeS,self.__timeE = self.__genTime()
-        self.timeStart = datetime.strptime(self.__timeS, '%Y-%m-%dT%H:%M:%S')
-        self.timeEnd = datetime.strptime(self.__timeE, '%Y-%m-%dT%H:%M:%S')
+        self.timeStart = self.__timeS
+        self.timeEnd = self.__timeE
+
+        self.topic_name = 'web.access'
+
+        super().__init__(
+            num_partitions=1,
+            num_replicas=2,
+            topic_name = 'web.access',
+            cleanup_policy='delete'
+        )
 
     
     def __repr__(self):
-        return f"[Ip: {self.ip}; sessionId: {self.sessionId}; url: {self.url}; browse: {self.browser}; plataform: {self.plataform}; TimeSpend: {self.timeEnd-self.timeStart} ]"
+        return f"[Ip: {self.ip}; sessionId: {self.sessionId}; url: {self.url}; browse: {self.browser}; plataform: {self.plataform};  ]"
 
 
     def __genTime(self):
@@ -54,3 +65,27 @@ class PageAccess(KafkaProducer):
         start_date = f"2020-{month}-{day}T{hour_begin}:{minutes_begin}:{seconds_begin}"
         end_date = f"2020-{month}-{day}T{hour_end}:{minutes_end}:{seconds_end}"
         return(start_date,end_date)
+
+    def time_millis(self):
+        return int(round(time.time() * 1000))
+
+
+    def run(self):
+        try:
+            print(" Message Producing -- Page Event")
+            self.producer.produce(
+                self.topic_name, 
+                json.dumps(
+                    {
+                        "ipv4": self.ip,
+                        "sessionId": self.sessionId,
+                        "url": self.url,
+                        "plataform": self.plataform,
+                        "browser": self.browser,
+                        "timeStart": self.timeStart,
+                        "timeEnd": self.timeEnd,
+                    }
+                )
+            )
+        except AssertionError as e:
+            print(e)

@@ -7,9 +7,9 @@ BROKER_URL = 'localhost:9092'
 
 ### The produce will create a NewTopic - Using JSON shcema
 
-class KafkaProducer(self):
+class KafkaProducer:
 
-    def __init__(self,num_partitions=1,num_replicas=1,topic_name,cleanup_policy='delete'):
+    def __init__(self,topic_name,cleanup_policy='delete',num_partitions=1,num_replicas=1):
         
         # Topic configuration that you wanna modify
         self.num_partitions = num_partitions
@@ -35,7 +35,7 @@ class KafkaProducer(self):
         # create a dict with Producer configuration
         self.producer_configuration = {
             "bootstrap.servers": BROKER_URL,
-            "client.id": f{topic_name.splt(".")[-1]+"_group"}
+            "client.id": f"{self.topic_name}_group"
         }
 
         # create a producer
@@ -50,13 +50,13 @@ class KafkaProducer(self):
         
         topic_metadata = client.list_topics(timeout = 5)
 
-        if (topics_metadata.topics.get(self.topic_name) is not None):
+        if (topic_metadata.topics.get(self.topic_name) is not None):
             print("Topic already exist")
             pass
         else:
             print(f" Creating New Topic {self.topic_name}")
 
-            future = client.create_topic([
+            futures = client.create_topic([
                 NewTopic(
                     topic = self.topic_name,
                     num_partitions = self.num_partitions,
@@ -69,12 +69,12 @@ class KafkaProducer(self):
                     future.result()
                     print(f"Topic {self.topic_name} Create Sucessuful!!!")
                 except Exception as e:
-                    print(f"Failed to create topic {topic_name}: {e}")
+                    print(f"Failed to create topic {self.topic_name}: {e}")
                     raise
 
 
-    def close():
+    def close(self):
         # Close the Producer, firts flush second close
-        self.produce.flush()
-        self.produce.close()
+        self.producer.flush()
+        self.producer.close()
         print("Produce Close Succesulf!!")
