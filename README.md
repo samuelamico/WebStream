@@ -4,7 +4,7 @@ The project aims to simulate in a cluster of VMs (3 VMs) the process of streamin
 
 
 - [x] Strat a little explanation
-- [ ] Describe the Kafka SetUp
+- [X] Describe the Kafka SetUp
 - [ ] Describe the Producer 
 - [ ] Describe the Consumer
 - [ ] Describe the Streaming Data Storage 
